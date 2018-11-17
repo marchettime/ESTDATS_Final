@@ -4,20 +4,39 @@ using System.Collections.Generic;
 
 namespace FinalESTDAT
 {
+    public  class Elemento : Queue
+    {
+        public int numero { get; set; }
+        public string nombreElemento { get; set; }
+    }
+    
+
     class Program
     {
-        
 
-        Queue ColaPedido = new Queue();
-        List<Queue> Pedidos = new List<Queue>();
+        public Elemento linea = new Elemento();
         
-       
+        public static Queue<Elemento> ColaPedido = new Queue<Elemento>();
+        public static List<Queue> Pedidos = new List<Queue>();
+                
         /// <summary>
         /// Muestra de Lista de Opciones Disponibles
         /// </summary>
         /// <returns>Opción seleccionada por el Usuario (validado)</returns>
-        static int Menu()
+        public static void Menu()
         {
+            Elemento dato = new Elemento();
+            Elemento traccion;
+            dato.numero = 3;
+            dato.nombreElemento = "prueba";
+           
+            ColaPedido.Enqueue(dato);
+            dato.Clear();
+            traccion = ColaPedido.Peek();
+
+            if (ColaPedido.Contains(dato))
+                Console.Write(traccion.nombreElemento);
+
             bool convOK = false;
             string ingreso;
             int select; //pongo una variable numerica para forzar a que el Usuario ponga un numero válido
@@ -32,9 +51,9 @@ namespace FinalESTDAT
                 Console.Write(
                   "     ~ Seleccione una opcion por favor ~ " + "\n\t" +
                   "1. Crear Cola de Pedido" + "\n\t" +
-                  "2. Borrar [ultima] Cola de Pedido" + "\n\t" +
+                  "2. Borrar Cola de Pedido" + "\n\t" +
                   "3. Agregar Pedido en Cola" + "\n\t" +
-                  "4. Borrar Pedido" + "\n\t" +
+                  "4. Borrar ultimo Pedido en Cola" + "\n\t" +
                   "5. Listar todos los pedidos" + "\n\t" +
                   "6. Listar ultimo Pedido" + "\n\t" +
                   "7. Listar Primer Pedido" + "\n\t" +
@@ -45,19 +64,10 @@ namespace FinalESTDAT
                 Console.Write("\nOpcion: ");
 
                 ingreso = Console.ReadLine();
-                convOK = Int32.TryParse(ingreso, out select);
-                
-                if (!convOK || select < 0 || select > 8)//Como las opciones son de 0 a 5... se entiende, no?
-                {
-                    LimpiarPantalla();
-                    Console.WriteLine("¡Ha seleccionado una opción inválida!");
-                }
-            } while (!convOK || select < 0 || select > 8);/*Este pedazo de codigo se seguirá ejecutando mientras que el usuario
-                                                no ingrese algo de entre 0 y 5. Fijense que la condicion
-                                                es inversa. Se sigue ejecutando mientras ingrese valores menores a 0 Ó 
-                                                mayores que 5.*/
+                convOK = ValidarYLimpiar(ref ingreso, out select, 0, 8);
+               
+            } while (!convOK);
             Derivador(select);
-            return select;//Retornamos el valor seleccionado.
         }
 
         /// <summary>
@@ -93,8 +103,9 @@ namespace FinalESTDAT
 
             conversionOK = Int32.TryParse(valor, out numero);
 
-            if (!conversionOK || numero < minimo || numero > maximo)//Como las opciones son de 0 a 5... se entiende, no?
+            if (!conversionOK || (conversionOK && (numero < minimo || numero > maximo) ))//Como las opciones son de 0 a 5... se entiende, no?
             {
+                conversionOK = false; //se fuerza por el rango de numeros
                 LimpiarPantalla();
                 Console.WriteLine("¡Ha seleccionado una opción inválida!");
             }
@@ -138,8 +149,8 @@ namespace FinalESTDAT
                     return; //Salimos directamente :)
                 default:
                     LimpiarPantalla();
-                    Console.WriteLine("Opcion invalida. Reingrese una opcion");
-                    opcion = -1;
+                    Console.WriteLine("No se encuentra la opcion seleccionada!");
+                    Menu();
                     break;
             }
             Console.Write("Presione una tecla para continuar...");
