@@ -37,37 +37,28 @@ namespace FinalESTDAT
             {
                 Console.WriteLine(
                     "*******************************************\n" +
-                    "*******************************************\n" +
+                    "*************EXAMEN FINAL******************\n" +
                     "***  *I.F.T.S. 18 DE 02 ~ *EST DE DAT*  ***\n" +
-                    "*******************************************\n" +
-                    "*******************************************  ");//Título
+                    "**********MAXIMILIANO E. MARCHETTI*********\n" +
+                    "*******************************************\n  ");//Título
                 if (TrabajandoActualmente.nombreCliente != null && TrabajandoActualmente.nombreCliente != "")
                 {
-                    Console.WriteLine("\n Usted está trabajando actualmente con el cliente: {0}", TrabajandoActualmente.nombreCliente);
+                    Console.WriteLine("\n Usted está trabajando em Cola con el cliente {0}\n", TrabajandoActualmente.nombreCliente);
                 }
                 Console.Write(
                   "     ~ Seleccione una opcion por favor ~ " + "\n\t" +
-                  "1. Crear nueva Cola de Pedido" + "\n\t" +
-                  "2. Agregar Pedido a la Cola" + "\n\t" +
-                  "\n\t" +
-                  "3. Borrar ultimo Elemento en Cola" + "\n\t" +
-                  "4. Borrar TODA la Cola de Pedido" + "\n\t" +
-                  "\n\t" +
-                  "5. Mostrar Cola sin Registrar en Lista" + "\n\t" +
-                  "\n\t" +
-                  "6. Ingresar Cola a LISTA" + "\n\t" + //Pasa de Cola a la Lista NUEVA OPCION PEDIDA
-                  "\n\t" +
-                  "7. LISTAR TODOS los Pedidos en la Lista" + "\n\t" +
-                  "8. LISTAR Primer Pedido en la Lista" + "\n\t" +
-                  "9. LISTAR ULTIMO Pedido en la Lista" + "\n\t" +
+                  " 1. Crear nueva Cola de Pedido" + "\n\t" +
+                  " 2. Agregar Pedido a la Cola" + "\n\t" +
+                  " 3. Borrar ultimo Elemento en Cola" + "\n\t" +
+                  " 4. Borrar TODA la Cola de Pedido" + "\n\t" +
+                  " 5. Mostrar Cola sin Registrar en Lista" + "\n\t" +
+                  " 6. Ingresar Cola a LISTA" + "\n\t" + //Pasa de Cola a la Lista NUEVA OPCION PEDIDA
+                  " 7. LISTAR TODOS los Pedidos en la Lista" + "\n\t" +
+                  " 8. LISTAR PRIMER Pedido en la Lista" + "\n\t" +
+                  " 9. LISTAR ULTIMO Pedido en la Lista" + "\n\t" +
                   "10. Cantidad de Pedidos" + "\n\t" +
-                  "-----------NUEVAS----------------" + "\n\t" +
-
                   "11. Buscar Cliente" + "\n\t" +
-
-
-                  "---------------------------------" + "\n\t" +
-                  "\t" + "\n" +
+                   "---------------------------------" + "\n\t" +
                   "\tX - Salir del Sistema");
                 // Cerrar con "X" y asi dejar el 0 utilizable
 
@@ -82,7 +73,7 @@ namespace FinalESTDAT
                     Environment.Exit(0);
                     return; //Salimos directamente :)
                 }
-                convOK = ValidarYLimpiar(ref ingresoOpcion, out select, 0, 11);
+                convOK = ValidarYLimpiar(ref ingresoOpcion, out select, 1, 11);
                 if(convOK)
                     Derivador(select);
             } while (!convOK);
@@ -129,6 +120,20 @@ namespace FinalESTDAT
             }
             return conversionOK;
         }
+        /// <summary>
+        /// nos devela si hay elementos ya guardados en la lista... Si no hay pasa.
+        /// </summary>
+        /// <returns>True si hay al menos un valor | False si esta vacío.</returns>
+        public static bool ConsultarSiElementosEnLista()
+        {
+            if (ListaDePedidos.Count == 0)
+            {
+                Console.WriteLine("LO SENTIMOS. NO HEMOS ENCONTRADO ELEMENTOS EN LISTA");
+                return false;
+            }
+            else
+                return true;
+        }
 
 
         /// <summary>
@@ -146,7 +151,6 @@ namespace FinalESTDAT
             switch (opcion) //El Switch es porque puedo tener múltiples tareas a resolver
             {
                 case 1:
-                    //Crear Cola
                     CrearCola();
                     break;
                 case 2:
@@ -195,8 +199,6 @@ namespace FinalESTDAT
         /// </summary>
         public static void CrearCola()
         {
-            //PedidoXCliente ColaPedido = new PedidoXCliente();
-            //Elemento articulo = new Elemento();
             string rescate;
             int decision;
             if (TrabajandoActualmente.nombreCliente != null && TrabajandoActualmente.nombreCliente !="")
@@ -268,7 +270,7 @@ namespace FinalESTDAT
                 nuevoElemento.cantidad = 0;
 
             //Console.WriteLine("Pedido a Agregar: ");
-            Console.Write("\n ID de Elemento: {0}"
+            Console.WriteLine("ID de Elemento: {0}"
                  + "\t| Nombre de Elemento: {1}"
                  + "\t| Unidades: {2}",nuevoElemento.id, nuevoElemento.nombre,  nuevoElemento.cantidad
                 );
@@ -312,7 +314,6 @@ namespace FinalESTDAT
             else
                 Console.WriteLine("No hay elementos por borrar");
             EsperarTecla();
-
         }
 
         /// <summary>
@@ -349,6 +350,34 @@ namespace FinalESTDAT
             }
             EsperarTecla();
 
+        }
+
+        /// <summary>
+        /// Muestra el estado actual de la Cola :)
+        /// </summary>
+        public static void MostrarColaActual()
+        {
+            Console.Write("CLIENTE: {0}", TrabajandoActualmente.nombreCliente);
+            Queue<Elemento> colaElementos = new Queue<Elemento>(TrabajandoActualmente.Pedidos);
+            Elemento muestra = new Elemento();
+            if (colaElementos.Count == 0)
+            {
+                Console.WriteLine("Este cliente no tiene elementos registrados");
+            }
+            else
+            {
+
+                //Si no me muevo con lo que estoy trabajando y luego no lo reasigno puedo estar en problemas.
+                while (colaElementos.Count > 0)
+                {
+                    muestra = colaElementos.Dequeue();
+                    Console.WriteLine("\nID de Elemento: {0}"
+                     + "\t| Nombre de Elemento: {1}"
+                     + "\t| Unidades: {2}", muestra.id, muestra.nombre, muestra.cantidad);
+
+                }
+            }
+            EsperarTecla();
         }
 
         /// <summary>
@@ -392,33 +421,6 @@ namespace FinalESTDAT
             Console.Clear();
         }
 
-        /// <summary>
-        /// Muestra el estado actual de la Cola :)
-        /// </summary>
-        public static void MostrarColaActual()
-        {
-            Console.Write("CLIENTE: {0}", TrabajandoActualmente.nombreCliente);
-            Queue<Elemento> colaElementos = new Queue<Elemento>(TrabajandoActualmente.Pedidos);
-            Elemento muestra = new Elemento();
-            if (colaElementos.Count == 0)
-            {
-                Console.WriteLine("Este cliente no tiene elementos registrados");
-            }
-            else
-            {
-                
-                //Si no me muevo con lo que estoy trabajando y luego no lo reasigno puedo estar en problemas.
-                while (colaElementos.Count > 0)
-                {
-                    muestra = colaElementos.Dequeue();
-                    Console.WriteLine("\nID de Elemento: {0}"
-                     + "\t| Nombre de Elemento: {1}"
-                     + "\t| Unidades: {2}", muestra.id, muestra.nombre, muestra.cantidad);
-                    
-                }
-            }
-            EsperarTecla();
-        }
 
         /// <summary>
         /// Imprime toda la Lista de Clientes y pedidos si es que hay
@@ -459,13 +461,13 @@ namespace FinalESTDAT
         }
 
         /// <summary>
-        /// Muestra si es que hay un ultimo elemento de lista
+        ///  Muestra si es que hay un primer elemento de lista
         /// </summary>
-        public static void MostrarUltimoElementoDeLista()
+        public static void MostrarPrimerElementoDeLista()
         {
             if (ConsultarSiElementosEnLista())
             {
-                PedidoXCliente registro = ListaDePedidos.Last();
+                PedidoXCliente registro = ListaDePedidos.First();
                 Queue<Elemento> CopiaDeElementos = new Queue<Elemento>(registro.Pedidos);
                 Console.WriteLine("---------------------------------------------------");
                 Console.WriteLine("---CLIENTE:---{0}---", registro.nombreCliente);
@@ -473,7 +475,7 @@ namespace FinalESTDAT
                 //Hago una copia para no borrar ni tocar el original!
                 if (registro.Pedidos.Count != 0)
                 {
-                    
+
                     while (CopiaDeElementos.Count > 0)
                     {
                         Elemento muestra = CopiaDeElementos.Dequeue();//Desencolo y lo meto en una muestra para poder imprimir
@@ -489,15 +491,14 @@ namespace FinalESTDAT
             }
             EsperarTecla();
         }
-
         /// <summary>
-        ///  Muestra si es que hay un primer elemento de lista
+        /// Muestra si es que hay un ultimo elemento de lista
         /// </summary>
-        public static void MostrarPrimerElementoDeLista()
+        public static void MostrarUltimoElementoDeLista()
         {
             if (ConsultarSiElementosEnLista())
             {
-                PedidoXCliente registro = ListaDePedidos.First();
+                PedidoXCliente registro = ListaDePedidos.Last();
                 Queue<Elemento> CopiaDeElementos = new Queue<Elemento>(registro.Pedidos);
                 Console.WriteLine("---------------------------------------------------");
                 Console.WriteLine("---CLIENTE:---{0}---", registro.nombreCliente);
@@ -540,21 +541,7 @@ namespace FinalESTDAT
             EsperarTecla();
         }
 
-        /// <summary>
-        /// nos devela si hay elementos ya guardados en la lista... Si no hay pasa.
-        /// </summary>
-        /// <returns>True si hay al menos un valor | False si esta vacío.</returns>
-        public static bool ConsultarSiElementosEnLista()
-        {
-            if (ListaDePedidos.Count == 0)
-            {
-                Console.WriteLine("LO SENTIMOS. NO HEMOS ENCONTRADO ELEMENTOS EN LISTA");
-                return false;
-            }
-            else
-                return true;
-        }
-
+        ///Busca que haya un cliebte y lo muestra, nada mas...
         public static void BuscarCliente()
        {
             if (ConsultarSiElementosEnLista())
