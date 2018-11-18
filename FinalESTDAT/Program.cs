@@ -6,18 +6,25 @@ namespace FinalESTDAT
 {
     public  class Elemento : Queue
     {
-        public int numero { get; set; }
-        public string nombreElemento { get; set; }
+        public int idElemento; // get; set; }
+        public string nombreElemento;// { get; set; }
+        public int cantidad;
+    }
+
+    public class PedidoXCliente
+    {
+        public string nombreCliente;
+        public Queue<Elemento> Pedidos = new Queue<Elemento>();
     }
     
 
     class Program
     {
 
-        public Elemento linea = new Elemento();
+        //public Elemento linea = new Elemento();
         
-        public static Queue<Elemento> ColaPedido = new Queue<Elemento>();
-        public static List<Queue> Pedidos = new List<Queue>();
+        //public static Queue<Elemento> ColaPedido = new Queue<Elemento>();
+        public static List<PedidoXCliente> ListaDePedidos = new List<PedidoXCliente>();
                 
         /// <summary>
         /// Muestra de Lista de Opciones Disponibles
@@ -25,17 +32,18 @@ namespace FinalESTDAT
         /// <returns>Opción seleccionada por el Usuario (validado)</returns>
         public static void Menu()
         {
-            Elemento dato = new Elemento();
-            Elemento traccion;
-            dato.numero = 3;
-            dato.nombreElemento = "prueba";
+            //Elemento dato = new Elemento();
+            //Elemento traccion;
+            //
+            //dato.idElemento = 3;
+            //dato.nombreElemento = "prueba";
            
-            ColaPedido.Enqueue(dato);
-            dato.Clear();
-            traccion = ColaPedido.Peek();
-
-            if (ColaPedido.Contains(dato))
-                Console.Write(traccion.nombreElemento);
+            //ColaPedido.Enqueue(dato);
+            //dato.Clear();
+            //traccion = ColaPedido.Peek();
+            //
+            //if (ColaPedido.Contains(dato))
+            //    Console.Write(traccion.nombreElemento);
 
             bool convOK = false;
             string ingreso;
@@ -43,24 +51,31 @@ namespace FinalESTDAT
             do //El Do-While primero hace y despues pregunta, por eso, usamos esta estructura.
             {
                 Console.WriteLine(
-                    "****************************************************\n" +
-                    "****************************************************\n" +
-                    "***  *MECANICA I.F.T.S. 18 DE 02 ~ *EST DE DAT*  ***\n" +
-                    "****************************************************\n" +
-                    "****************************************************  ");//Título
+                    "*******************************************\n" +
+                    "*******************************************\n" +
+                    "***  *I.F.T.S. 18 DE 02 ~ *EST DE DAT*  ***\n" +
+                    "*******************************************\n" +
+                    "*******************************************  ");//Título
                 Console.Write(
                   "     ~ Seleccione una opcion por favor ~ " + "\n\t" +
                   "1. Crear Cola de Pedido" + "\n\t" +
-                  "2. Borrar Cola de Pedido" + "\n\t" +
-                  "3. Agregar Pedido en Cola" + "\n\t" +
+                  "2. Agregar Pedido a la Cola" + "\n\t" +
+                  "3. Borrar Cola de Pedido" + "\n\t" +
                   "4. Borrar ultimo Pedido en Cola" + "\n\t" +
                   "5. Listar todos los pedidos" + "\n\t" +
                   "6. Listar ultimo Pedido" + "\n\t" +
                   "7. Listar Primer Pedido" + "\n\t" +
                   "8. Cantidad de Pedidos" + "\n\t" +
+                  "-----------NUEVAS----------------" + "\n\t" +
+                  "9. Cambiar orden de Colas" + "\n\t" +
+                  "0. Consultar un Pedido Realizado" + "\n\t" +
+
+
                   "---------------------------------" + "\n\t" +
                   "\t" + "\n" +
                   "\t0 - Salir del Sistema");
+                // Cerrar con "X" y asi dejar el 0 utilizable
+
                 Console.Write("\nOpcion: ");
 
                 ingreso = Console.ReadLine();
@@ -84,7 +99,6 @@ namespace FinalESTDAT
             {
                 LimpiarPantalla();
                 Console.WriteLine("¡Ha seleccionado una opción inválida!");
-                
             }
             return conversionOK;
                 
@@ -107,7 +121,7 @@ namespace FinalESTDAT
             {
                 conversionOK = false; //se fuerza por el rango de numeros
                 LimpiarPantalla();
-                Console.WriteLine("¡Ha seleccionado una opción inválida!");
+                Console.WriteLine("¡Ha ingresado un valor inválido!");
             }
             return conversionOK;
         }
@@ -128,10 +142,12 @@ namespace FinalESTDAT
             switch (opcion) //El Switch es porque puedo tener múltiples tareas a resolver
             {
                 case 1:
-                    //Consulta(ref stock); //Recorrerá toda la lista de productos, con y sin stock.
+                    //Crear Cola
+                    CrearCola();  
                     break;
                 case 2:
-                    //Sumar(ref stock); //Ante una compra de un producto, añadiremos unidades.
+                    //Agregar pedido a la Cola
+                    AgregarElemento();
                     break;
                 case 3:
                     //Resta(ref stock); //Si vendimos, sacamos unidades de circulación
@@ -157,6 +173,85 @@ namespace FinalESTDAT
             Console.ReadKey();
         }
 
+        static void CrearCola()
+        {
+            PedidoXCliente ColaPedido = new PedidoXCliente();
+            Elemento articulo = new Elemento();
+            articulo.cantidad = 0;
+            articulo.nombreElemento = "putos todos";
+            articulo.idElemento = 444;
+            string ingresoTeclado;
+            do
+            {
+                Console.Write("Ingrese nombre del Cliente: ");
+                ingresoTeclado = Console.ReadLine();
+                Console.WriteLine("");
+            } while (ingresoTeclado == "");
+            ColaPedido.nombreCliente = ingresoTeclado;
+            ColaPedido.Pedidos.Enqueue(articulo);
+            ColaPedido.Pedidos.Enqueue(articulo);
+            ColaPedido.Pedidos.Enqueue(articulo);
+            //Queue<Elemento> ColaPedido = new Queue<Elemento>();
+
+            ListaDePedidos.Add(ColaPedido);
+        }
+
+        static void AgregarElemento()
+        {
+            Elemento nuevoElemento = new Elemento();
+            string ingresoTeclado;
+            
+            do {
+                Console.WriteLine("****Agregado de Elemento a Cola****");
+                Console.Write("Ingrese el Codigo de Elemento: ");
+                ingresoTeclado = Console.ReadLine();
+                Console.WriteLine("");
+                
+            } while (ValidarYLimpiar(ref ingresoTeclado, out nuevoElemento.idElemento, 0, 999));
+
+            do
+            {
+                Console.Write("Ingrese el Nombre del Elemento (no puede ser vacío): ");
+                ingresoTeclado = Console.ReadLine();
+                Console.WriteLine("");
+            } while (ingresoTeclado.Equals(""));
+            nuevoElemento.nombreElemento = ingresoTeclado;
+
+            Console.Write("¿Compraste Unidades? Si ingresas \'S\' podras sumar unidades.");
+            ingresoTeclado = Console.ReadLine();
+            
+            
+            if (ingresoTeclado.Length == 1 &&  Convert.ToChar(ingresoTeclado) != 'S')
+            {
+                do
+                {
+                    
+                    Console.Write("Unidades Compradas: ");
+                    ingresoTeclado = Console.ReadLine();
+                    Console.WriteLine("");
+
+                } while (ValidarYLimpiar(ref ingresoTeclado, out nuevoElemento.cantidad, 0, Int32.MaxValue));
+            }
+
+            Console.WriteLine("Pedido a Agregar: ");
+            Console.Write("ID de Elemento: {0}"
+                                
+                );
+            Console.Write("S: Confirmar | N: Cancelar sin guardar" + "\n");
+            if (ingresoTeclado.Length == 1 && Convert.ToChar(ingresoTeclado) != 'S')
+            {
+                do
+                {
+
+                    Console.Write("Unidades Compradas: ");
+                    ingresoTeclado = Console.ReadLine();
+                    Console.WriteLine("");
+
+                } while (ValidarYLimpiar(ref ingresoTeclado, out nuevoElemento.cantidad, 0, Int32.MaxValue));
+            }
+
+
+        }
         /// <summary>
         /// Solo limpia la pantalla, no hay tanto que hacer aca...
         /// </summary>
